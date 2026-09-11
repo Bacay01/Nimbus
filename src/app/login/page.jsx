@@ -66,7 +66,7 @@ export default function LoginPage() {
 
       <div className="w-full md:max-w-md md:mx-auto md:pb-16">
         <div className="bg-white rounded-t-3xl md:rounded-3xl shadow-2xl px-6 py-8 md:px-8">
-          <h1 className="text-2xl font-bold text-navy">Log in to Nimbus</h1>
+          <h1 className="text-2xl font-bold text-navy">Log in to Chase</h1>
           {error && <p className="mt-3 text-sm text-danger">{error}</p>}
 
           {stage === "credentials" && (
