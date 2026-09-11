@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import PasswordInput from "@/components/PasswordInput";
-import ChaseLogo from "@/components/ChaseLogo";
+import NimbusLogo from "@/components/NimbusLogo";
 
 export default function SignupPage() {
   const router = useRouter();
@@ -48,7 +48,7 @@ export default function SignupPage() {
       <div className="flex-1 flex flex-col justify-center px-6 pt-14 pb-8 md:items-center md:text-center md:pt-20">
         <div className="flex items-center gap-2 text-white">
           <span className="font-bold text-3xl tracking-tight">Chase</span>
-          <ChaseLogo className="w-8 h-8" />
+          <NimbusLogo className="w-8 h-8" />
         </div>
         <p className="mt-3 text-white/90 text-lg max-w-xs md:max-w-sm">
           Open an account in under a minute.
