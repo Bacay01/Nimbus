@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "Nimbus",
+  title: "Chase",
   description: "A simple, modern way to manage your money.",
 };
 

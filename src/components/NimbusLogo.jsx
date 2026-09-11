@@ -1,4 +1,4 @@
-export default function NimbusLogo({ className = "w-7 h-7" }) {
+export default function ChaseLogo({ className = "w-7 h-7" }) {
   return (
     <svg viewBox="0 0 40 40" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
       <polygon
@@ -8,7 +8,7 @@ export default function NimbusLogo({ className = "w-7 h-7" }) {
         strokeLinejoin="round"
       />
       <text x="20" y="25" textAnchor="middle" fontSize="15" fontWeight="700" fill="currentColor" fontFamily="Arial, sans-serif">
-        N
+        C
       </text>
     </svg>
   );

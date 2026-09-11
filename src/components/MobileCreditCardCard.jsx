@@ -20,7 +20,7 @@ export default function MobileCreditCardCard({ card }) {
       </div>
       <div className="px-5 py-4">
         <button className="w-full flex items-center justify-between text-[17px] font-medium text-text">
-          <span>Nimbus Credit Card •••• {card.cardNumber.slice(-4)}</span>
+          <span>Chase Credit Card •••• {card.cardNumber.slice(-4)}</span>
           <ChevronRight className="w-4 h-4 text-text-secondary shrink-0 ml-2" />
         </button>
         <div className="mt-4 text-right">
