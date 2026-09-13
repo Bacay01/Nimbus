@@ -29,21 +29,23 @@ export default async function AdminUserDetailPage({ params }) {
 
   const accounts = user.accounts.map((acc) => {
     const transactions = [
-      ...acc.sentTx.map((t) => ({
-        id: t.id,
-        amount: Number(t.amount),
-        description: t.description,
-        direction: "debit",
-        createdAt: t.createdAt,
-      })),
-      ...acc.receivedTx.map((t) => ({
-        id: t.id,
-        amount: Number(t.amount),
-        description: t.description,
-        direction: "credit",
-        createdAt: t.createdAt,
-      })),
-    ].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+  ...acc.sentTx.map((t) => ({
+    id: t.id,
+    amount: Number(t.amount),
+    description: t.description,
+    externalLabel: t.externalLabel,
+    direction: "debit",
+    createdAt: t.createdAt,
+  })),
+  ...acc.receivedTx.map((t) => ({
+    id: t.id,
+    amount: Number(t.amount),
+    description: t.description,
+    externalLabel: t.externalLabel,
+    direction: "credit",
+    createdAt: t.createdAt,
+  })),
+].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
     return {
       id: acc.id,

@@ -44,6 +44,7 @@ model Transaction {
   id           String   @id @default(cuid())
   amount       Decimal  @db.Decimal(12, 2)
   description  String?
+  externalLabel String?
   status       String   @default("completed")
   fromId       String?
   from         Account? @relation("SenderAccount", fields: [fromId], references: [id])

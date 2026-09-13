@@ -16,10 +16,12 @@ export default function AdminTransactionHistory({ accountId, transactions }) {
   const [type, setType] = useState("credit");
   const [amount, setAmount] = useState("");
   const [description, setDescription] = useState("");
+  const [externalLabel, setExternalLabel] = useState("");
   const [adding, setAdding] = useState(false);
   const [editingId, setEditingId] = useState(null);
   const [editAmount, setEditAmount] = useState("");
   const [editDescription, setEditDescription] = useState("");
+  const [editExternalLabel, setEditExternalLabel] = useState("");
   const [savingEdit, setSavingEdit] = useState(false);
   const [deletingId, setDeletingId] = useState(null);
   const [status, setStatus] = useState(null);
@@ -32,12 +34,13 @@ export default function AdminTransactionHistory({ accountId, transactions }) {
       const res = await fetch(`/api/admin/accounts/${accountId}/transactions`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ type, amount: Number(amount), description }),
+        body: JSON.stringify({ type, amount: Number(amount), description, externalLabel }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Failed to add transaction");
       setAmount("");
       setDescription("");
+      setExternalLabel("");
       setStatus({ type: "success", message: "Transaction added." });
       router.refresh();
     } catch (err) {
@@ -51,6 +54,7 @@ export default function AdminTransactionHistory({ accountId, transactions }) {
     setEditingId(txn.id);
     setEditAmount(txn.amount.toString());
     setEditDescription(txn.description || "");
+    setEditExternalLabel(txn.externalLabel || "");
   }
 
   async function handleSaveEdit(id) {
@@ -60,7 +64,7 @@ export default function AdminTransactionHistory({ accountId, transactions }) {
       const res = await fetch(`/api/admin/transactions/${id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ amount: Number(editAmount), description: editDescription }),
+        body: JSON.stringify({ amount: Number(editAmount), description: editDescription, externalLabel: editExternalLabel }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Failed to update transaction");
@@ -119,8 +123,15 @@ export default function AdminTransactionHistory({ accountId, transactions }) {
                   className="px-2 py-1 border border-border rounded focus:outline-none focus:ring-2 focus:ring-primary"
                 />
                 <input
+                  placeholder="Description"
                   value={editDescription}
                   onChange={(e) => setEditDescription(e.target.value)}
+                  className="px-2 py-1 border border-border rounded focus:outline-none focus:ring-2 focus:ring-primary"
+                />
+                <input
+                  placeholder="Source / destination label (optional, e.g. 'Employer Payroll')"
+                  value={editExternalLabel}
+                  onChange={(e) => setEditExternalLabel(e.target.value)}
                   className="px-2 py-1 border border-border rounded focus:outline-none focus:ring-2 focus:ring-primary"
                 />
                 <div className="flex gap-3">
@@ -140,6 +151,7 @@ export default function AdminTransactionHistory({ accountId, transactions }) {
               <div className="flex items-center justify-between gap-2">
                 <div className="min-w-0">
                   <p className="text-text truncate">{txn.description || (txn.direction === "credit" ? "Credit" : "Debit")}</p>
+                  {txn.externalLabel && <p className="text-text-secondary italic truncate">Label: {txn.externalLabel}</p>}
                   <p className="text-text-secondary">{formatDate(txn.createdAt)}</p>
                 </div>
                 <div className="flex items-center gap-2 shrink-0">
@@ -188,6 +200,12 @@ export default function AdminTransactionHistory({ accountId, transactions }) {
           placeholder="Description (optional)"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
+          className="px-2 py-1.5 text-xs border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+        />
+        <input
+          placeholder="Source / destination label (optional, e.g. 'Employer Payroll')"
+          value={externalLabel}
+          onChange={(e) => setExternalLabel(e.target.value)}
           className="px-2 py-1.5 text-xs border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
         />
         <button

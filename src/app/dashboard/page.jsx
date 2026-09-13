@@ -20,6 +20,8 @@ function formatMoney(amount) {
   return new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(Number(amount));
 }
 
+const typeLabels = { checking: "Checking", savings: "Savings" };
+
 function KebabIcon(props) {
   return (
     <svg viewBox="0 0 24 24" fill="currentColor" {...props}>
@@ -71,12 +73,26 @@ export default async function DashboardPage() {
   }, 0);
 
   const recent = accounts
-    .flatMap((acc) => [
-      ...acc.sentTx.map((t) => ({ ...t, direction: "sent", counterparty: t.to ? t.to.accountNumber : null })),
-      ...acc.receivedTx.map((t) => ({ ...t, direction: "received", counterparty: t.from ? t.from.accountNumber : null })),
-    ])
-    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-    .slice(0, 5);
+  .flatMap((acc) => [
+    ...acc.sentTx.map((t) => ({
+      ...t,
+      direction: "sent",
+      counterparty: t.to ? t.to.accountNumber : t.externalLabel || "an admin adjustment",
+      fromLabel: `${typeLabels[acc.type] || acc.type} ••${acc.accountNumber.slice(-4)}`,
+    })),
+    ...acc.receivedTx.map((t) => ({
+      ...t,
+      direction: "received",
+      counterparty: t.from ? t.from.accountNumber : t.externalLabel || "an admin adjustment",
+      fromLabel: t.from
+        ? `${typeLabels[t.from.type] || t.from.type} ••${t.from.accountNumber.slice(-4)}`
+        : t.externalLabel || "an admin adjustment",
+    })),
+  ])
+  .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+  .slice(0, 5);
+
+
 
   const alerts = [];
   if (checking && Number(checking.balance) < 100) {
@@ -117,7 +133,7 @@ export default async function DashboardPage() {
         </div>
 
         <div className="mt-4 px-4">
-          <RecentActivityCard transactions={recent} />
+          <RecentActivityCard transactions={recent} viewAllHref="/transactions" />
         </div>
 
         <div className="mt-4 px-4">
@@ -155,7 +171,7 @@ export default async function DashboardPage() {
         </div>
 
         <div className="mt-6">
-          <RecentActivityCard transactions={recent} />
+          <RecentActivityCard transactions={recent} viewAllHref="/transactions" />
         </div>
 
         <div className="mt-6">

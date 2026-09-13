@@ -7,7 +7,7 @@ export async function POST(req, { params }) {
   if (!admin) return NextResponse.json({ error: "Not authorized" }, { status: 403 });
 
   const { id } = await params;
-  const { type, amount, description } = await req.json();
+  const { type, amount, description, externalLabel } = await req.json();
   const numericAmount = Number(amount);
 
   if (!["credit", "debit"].includes(type) || !numericAmount || numericAmount <= 0) {
@@ -28,6 +28,7 @@ export async function POST(req, { params }) {
           data: {
             amount: numericAmount,
             description: description || "Manual credit by admin",
+            externalLabel: externalLabel || null,
             status: "completed",
             toId: id,
           },
@@ -39,6 +40,7 @@ export async function POST(req, { params }) {
         data: {
           amount: numericAmount,
           description: description || "Manual debit by admin",
+          externalLabel: externalLabel || null,
           status: "completed",
           fromId: id,
         },
