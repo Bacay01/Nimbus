@@ -34,7 +34,7 @@ export default async function TransferPage() {
       <MobileHeader />
 
       <div className="max-w-md mx-auto px-4 md:px-6 py-8 md:py-10 pb-24 md:pb-10">
-        <TransferForm accounts={plainAccounts} />
+        <TransferForm accounts={plainAccounts} frozenNotice={frozenNotice} />
         <TransferOptionsList />
       </div>
 

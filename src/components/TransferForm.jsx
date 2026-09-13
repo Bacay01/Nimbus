@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import FrozenNoticeToast, { useFrozenNotice } from "@/components/FrozenNoticeToast";
 
 function formatMoney(amount) {
   return new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(Number(amount));
@@ -28,16 +29,23 @@ function ArrowRight(props) {
   );
 }
 
-export default function TransferForm({ accounts }) {
+export default function TransferForm({ accounts, frozenNotice }) {
   const [fromAccountId, setFromAccountId] = useState("");
   const [toAccountNumber, setToAccountNumber] = useState("");
   const [amount, setAmount] = useState("");
   const [description, setDescription] = useState("");
   const [status, setStatus] = useState(null);
   const [loading, setLoading] = useState(false);
+  const { notice, showNotice, dismiss } = useFrozenNotice();
 
   async function handleSubmit(e) {
     e.preventDefault();
+
+    if (frozenNotice) {
+      showNotice(frozenNotice);
+      return;
+    }
+
     setStatus(null);
     setLoading(true);
 
@@ -146,6 +154,8 @@ export default function TransferForm({ accounts }) {
           {!loading && <ArrowRight className="w-4 h-4" />}
         </button>
       </form>
+
+      <FrozenNoticeToast notice={notice} onDismiss={dismiss} />
     </div>
   );
 }
