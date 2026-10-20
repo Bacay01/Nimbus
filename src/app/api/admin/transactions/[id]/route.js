@@ -7,11 +7,19 @@ export async function PATCH(req, { params }) {
   if (!admin) return NextResponse.json({ error: "Not authorized" }, { status: 403 });
 
   const { id } = await params;
-  const { amount, description, externalLabel } = await req.json();
+  const { amount, description, externalLabel, createdAt } = await req.json();
   const numericAmount = Number(amount);
 
   if (!numericAmount || numericAmount <= 0) {
     return NextResponse.json({ error: "A positive amount is required" }, { status: 400 });
+  }
+
+  let parsedCreatedAt;
+  if (createdAt !== undefined) {
+    parsedCreatedAt = new Date(createdAt);
+    if (Number.isNaN(parsedCreatedAt.getTime())) {
+      return NextResponse.json({ error: "Invalid date" }, { status: 400 });
+    }
   }
 
   try {
@@ -30,7 +38,12 @@ export async function PATCH(req, { params }) {
 
       return tx.transaction.update({
         where: { id },
-        data: { amount: numericAmount, description, externalLabel: externalLabel || null },
+        data: {
+          amount: numericAmount,
+          description,
+          externalLabel: externalLabel || null,
+          ...(parsedCreatedAt ? { createdAt: parsedCreatedAt } : {}),
+        },
       });
     });
 

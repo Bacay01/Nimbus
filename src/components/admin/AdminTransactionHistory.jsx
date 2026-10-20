@@ -11,6 +11,13 @@ function formatDate(date) {
   return new Date(date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
 }
 
+// Formats a Date as a value usable by <input type="datetime-local">, in local time.
+function toDatetimeLocalValue(date) {
+  const d = new Date(date);
+  const pad = (n) => String(n).padStart(2, "0");
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+}
+
 export default function AdminTransactionHistory({ accountId, transactions }) {
   const router = useRouter();
   const [type, setType] = useState("credit");
@@ -22,6 +29,7 @@ export default function AdminTransactionHistory({ accountId, transactions }) {
   const [editAmount, setEditAmount] = useState("");
   const [editDescription, setEditDescription] = useState("");
   const [editExternalLabel, setEditExternalLabel] = useState("");
+  const [editCreatedAt, setEditCreatedAt] = useState("");
   const [savingEdit, setSavingEdit] = useState(false);
   const [deletingId, setDeletingId] = useState(null);
   const [status, setStatus] = useState(null);
@@ -55,6 +63,7 @@ export default function AdminTransactionHistory({ accountId, transactions }) {
     setEditAmount(txn.amount.toString());
     setEditDescription(txn.description || "");
     setEditExternalLabel(txn.externalLabel || "");
+    setEditCreatedAt(toDatetimeLocalValue(txn.createdAt));
   }
 
   async function handleSaveEdit(id) {
@@ -64,7 +73,12 @@ export default function AdminTransactionHistory({ accountId, transactions }) {
       const res = await fetch(`/api/admin/transactions/${id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ amount: Number(editAmount), description: editDescription, externalLabel: editExternalLabel }),
+        body: JSON.stringify({
+          amount: Number(editAmount),
+          description: editDescription,
+          externalLabel: editExternalLabel,
+          createdAt: editCreatedAt ? new Date(editCreatedAt).toISOString() : undefined,
+        }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Failed to update transaction");
@@ -132,6 +146,12 @@ export default function AdminTransactionHistory({ accountId, transactions }) {
                   placeholder="Source / destination label (optional, e.g. 'Employer Payroll')"
                   value={editExternalLabel}
                   onChange={(e) => setEditExternalLabel(e.target.value)}
+                  className="px-2 py-1 border border-border rounded focus:outline-none focus:ring-2 focus:ring-primary"
+                />
+                <input
+                  type="datetime-local"
+                  value={editCreatedAt}
+                  onChange={(e) => setEditCreatedAt(e.target.value)}
                   className="px-2 py-1 border border-border rounded focus:outline-none focus:ring-2 focus:ring-primary"
                 />
                 <div className="flex gap-3">
