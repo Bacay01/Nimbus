@@ -2,8 +2,6 @@
 
 import Link from "next/link";
 import { signOut } from "next-auth/react";
-import NimbusLogo from "./NimbusLogo";
-
 function BellIcon(props) {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
@@ -32,7 +30,6 @@ export default function MobileHeader() {
 
         <Link href="/dashboard" className="flex items-center gap-1.5 text-primary">
           <span className="font-bold text-base tracking-tight">Chase</span>
-          <NimbusLogo className="w-5 h-5" />
         </Link>
 
         <button onClick={() => signOut({ callbackUrl: "/login" })} className="text-primary" aria-label="Profile / sign out">
