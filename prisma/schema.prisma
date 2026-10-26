@@ -27,17 +27,18 @@ model Admin {
 }
 
 model Account {
-  id            String        @id @default(cuid())
-  accountNumber String        @unique @default(cuid())
-  type          String        @default("checking")
-  balance       Decimal       @default(1000.00) @db.Decimal(12, 2)
-  frozen        Boolean       @default(false)
-  frozenReason  String?
-  userId        String
-  user          User          @relation(fields: [userId], references: [id], onDelete: Cascade)
-  sentTx        Transaction[] @relation("SenderAccount")
-  receivedTx    Transaction[] @relation("ReceiverAccount")
-  createdAt     DateTime      @default(now())
+  id              String        @id @default(cuid())
+  accountNumber   String        @unique @default(cuid())
+  type            String        @default("checking")
+  balance         Decimal       @default(1000.00) @db.Decimal(12, 2)
+  frozen          Boolean       @default(false)
+  frozenReason    String?
+  transferBlocked Boolean       @default(false)
+  userId          String
+  user            User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  sentTx          Transaction[] @relation("SenderAccount")
+  receivedTx      Transaction[] @relation("ReceiverAccount")
+  createdAt       DateTime      @default(now())
 }
 
 model Transaction {

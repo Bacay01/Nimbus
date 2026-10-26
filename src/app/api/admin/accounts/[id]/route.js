@@ -7,7 +7,7 @@ export async function PATCH(req, { params }) {
   if (!admin) return NextResponse.json({ error: "Not authorized" }, { status: 403 });
 
   const { id } = await params;
-  const { balance, frozen, frozenReason } = await req.json();
+  const { balance, frozen, frozenReason, transferBlocked } = await req.json();
 
   const data = {};
   if (balance !== undefined) {
@@ -19,6 +19,7 @@ export async function PATCH(req, { params }) {
   }
   if (frozen !== undefined) data.frozen = Boolean(frozen);
   if (frozenReason !== undefined) data.frozenReason = frozenReason;
+  if (transferBlocked !== undefined) data.transferBlocked = Boolean(transferBlocked);
 
   const account = await prisma.account.update({ where: { id }, data });
   return NextResponse.json({ account });

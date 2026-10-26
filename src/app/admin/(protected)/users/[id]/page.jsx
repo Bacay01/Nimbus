@@ -54,6 +54,7 @@ export default async function AdminUserDetailPage({ params }) {
       balance: Number(acc.balance),
       frozen: acc.frozen,
       frozenReason: acc.frozenReason,
+      transferBlocked: acc.transferBlocked,
       transactions,
     };
   });

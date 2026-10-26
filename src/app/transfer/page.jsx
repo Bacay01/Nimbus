@@ -24,6 +24,7 @@ export default async function TransferPage() {
     balance: Number(a.balance),
     frozen: a.frozen,
     frozenReason: a.frozenReason,
+    transferBlocked: a.transferBlocked,
   }));
 
   return (

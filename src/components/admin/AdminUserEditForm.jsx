@@ -8,6 +8,7 @@ export default function AdminUserEditForm({ user }) {
   const [name, setName] = useState(user.name);
   const [email, setEmail] = useState(user.email);
   const [password, setPassword] = useState("");
+  const [pin, setPin] = useState("");
   const [status, setStatus] = useState(null);
   const [saving, setSaving] = useState(false);
   const [deleting, setDeleting] = useState(false);
@@ -20,7 +21,7 @@ export default function AdminUserEditForm({ user }) {
     const res = await fetch(`/api/admin/users/${user.id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, email, password: password || undefined }),
+      body: JSON.stringify({ name, email, password: password || undefined, pin: pin || undefined }),
     });
 
     const data = await res.json();
@@ -31,6 +32,7 @@ export default function AdminUserEditForm({ user }) {
       return;
     }
     setPassword("");
+    setPin("");
     setStatus({ type: "success", message: "Saved." });
     router.refresh();
   }
@@ -90,7 +92,19 @@ export default function AdminUserEditForm({ user }) {
           placeholder="Leave blank to keep current password"
           className="mt-1 w-full px-3 py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
         />
-        <p className="mt-1 text-xs text-text-secondary">Only fill this in to reset the customer's password.</p>
+        <p className="mt-1 text-xs text-text-secondary">Only fill this in to reset the customer&apos;s password.</p>
+
+        <label className="block mt-4 text-sm font-medium text-text">New PIN</label>
+        <input
+          type="text"
+          inputMode="numeric"
+          maxLength={4}
+          value={pin}
+          onChange={(e) => setPin(e.target.value.replace(/\D/g, "").slice(0, 4))}
+          placeholder="Leave blank to keep current PIN"
+          className="mt-1 w-full px-3 py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+        />
+        <p className="mt-1 text-xs text-text-secondary">4 digits. Only fill this in to reset the customer&apos;s login PIN.</p>
 
         <div className="mt-6 flex items-center justify-between">
           <button

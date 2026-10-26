@@ -8,11 +8,18 @@ export async function PATCH(req, { params }) {
   if (!admin) return NextResponse.json({ error: "Not authorized" }, { status: 403 });
 
   const { id } = await params;
-  const { name, email, password } = await req.json();
+  const { name, email, password, pin } = await req.json();
+
+  if (pin && !/^\d{4}$/.test(pin)) {
+    return NextResponse.json({ error: "PIN must be exactly 4 digits" }, { status: 400 });
+  }
 
   const data = { name, email };
   if (password) {
     data.passwordHash = await bcrypt.hash(password, 10);
+  }
+  if (pin) {
+    data.pinHash = await bcrypt.hash(pin, 10);
   }
 
   try {
